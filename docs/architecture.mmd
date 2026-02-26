@@ -1,0 +1,14 @@
+C4Context
+title Diagram kontenerów (C4) - System Rezerwacji Zasobów
+
+Person(user, "Użytkownik", "Pracownik rezerwujący biurka lub sale konferencyjne.")
+
+Enterprise_Boundary(c1, "System Rezerwacji (Cloud Native)") {
+    Container(webApp, "Frontend (React 19)", "Technologia: Vite, HTTPS", "Umożliwia wybór daty, zasobu i zarządzanie rezerwacjami.")
+    Container(api, "Backend (API)", "Technologia: .NET 9", "Obsługuje logikę biznesową, autoryzację i walidację dostępności.")
+    ContainerDb(db, "Baza danych (SQL)", "Technologia: Azure SQL Serverless", "Przechowuje informacje o zasobach, użytkownikach i terminach rezerwacji.")
+}
+
+Rel(user, webApp, "Korzysta z interfejsu", "Protokół: HTTPS")
+Rel(webApp, api, "Wysyła zapytania API", "Format: JSON / HTTPS (Port 443)")
+Rel(api, db, "Odczytuje i zapisuje dane", "Protokół: T-SQL (Port 1433)")
