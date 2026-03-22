@@ -1,5 +1,5 @@
 version: "3.9"
- 
+
 services:
   frontend:
     build: ./frontend
@@ -7,7 +7,7 @@ services:
       - "8080:80"
     networks:
       - cloud-network
- 
+
   backend:
     build: ./backend
     ports:
@@ -23,9 +23,15 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
+    volumes:
+      - cloud-db-data:/var/opt/mssql
     networks:
       - cloud-network
- 
+
 networks:
   cloud-network:
     driver: bridge
+
+volumes:
+  cloud-db-data:
+    external: true
