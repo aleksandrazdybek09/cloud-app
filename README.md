@@ -35,4 +35,12 @@
 * **5.3. Migracje:** Projekt wykorzystuje EF Core, historia jest w folderze Migrations.
 * **5.4. Frontend:** Użytkownik może dodawać i odczytywać zadania z poziomu aplikacji React.
 
+# Realizacja Części 6: Wdrożenie aplikacji do chmury (Microsoft Azure)
+W tym etapie projekt został z sukcesem przeniesiony ze środowiska lokalnego (localhost) do chmury publicznej Microsoft Azure, zyskując pełną dostępność w internecie.
+**Zrealizowane zadania:**
+* **Baza danych (Azure SQL):** Utworzenie chmurowej instancji bazy danych, konfiguracja reguł zapory sieciowej (Firewall) dla bezpiecznego dostępu oraz udana migracja schematu bazy z wykorzystaniem narzędzi Entity Framework Core (`dotnet ef`).
+* **Backend (.NET 8):** Publikacja REST API w usłudze Azure App Service (środowisko Linux). Proces obejmował konfigurację zmiennych środowiskowych (m.in. wymuszenie nasłuchiwania na porcie `8080` dla .NET 8 oraz włączenie interfejsu Swagger w środowisku chmurowym) i zdefiniowanie punktu wejścia aplikacji.
+* **Frontend (React):** Zintegrowanie aplikacji klienckiej z nowym, produkcyjnym adresem API.
+* **Hosting i CI/CD:** Wdrożenie frontendu przy pomocy usługi Azure Static Web Apps wraz z automatyzacją procesu budowania i publikacji (Continuous Deployment) przy użyciu GitHub Actions.
+
 > **Informacja:** Ten plik będzie ewoluował. [cite_start]W kolejnych etapach dodamy tutaj sekcję "Quick Start", opis zmiennych środowiskowych oraz instrukcję wdrożenia (CI/CD)[cite: 280, 549].
