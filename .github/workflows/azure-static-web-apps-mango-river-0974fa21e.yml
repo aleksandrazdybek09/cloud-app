@@ -10,8 +10,36 @@ on:
       - main
 
 jobs:
-  build_and_test_backend:
+  jobs:
+    build_and_test_backend:
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: '8.0.x'
+
+        # KROK 1: RESTORE dla całego folderu backend
+        - name: Restore dependencies
+          run: dotnet restore
+          working-directory: ./backend  # Tu wpisz nazwę folderu z Twoim projektem C#
+
+        # KROK 2: BUILD głównego projektu
+        - name: Build Backend
+          run: dotnet build --configuration Release --no-restore
+          working-directory: ./backend
+
+        # KROK 3: TESTY (Zakładając, że folder Backend.Tests jest obok folderu backend)
+        - name: Run Tests
+          run: dotnet test ../Backend.Tests/Backend.Tests.csproj --configuration Release
+          working-directory: ./backend
+  deploy_frontend:
+    needs: build_and_test_backend
     runs-on: ubuntu-latest
+    name: Build and Deploy Frontend
     steps:
       - uses: actions/checkout@v3
 
@@ -21,32 +49,15 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        # Ta linia szuka wszystkich plików .csproj w całym repozytorium
-        run: dotnet restore **/*.csproj
+        # Przywracamy biblioteki dla obu projektów osobno
+        run: |
+          dotnet restore backend/Backend.csproj
+          dotnet restore Backend.Tests/Backend.Tests.csproj
 
       - name: Build Backend
-        # Budujemy wszystko, co znaleźliśmy
-        run: dotnet build **/*.csproj --configuration Release --no-restore
+        # Budujemy tylko główny backend
+        run: dotnet build backend/Backend.csproj --configuration Release --no-restore
 
       - name: Run Tests
-        # Szukamy konkretnie projektu testowego i go uruchamiamy
-        run: dotnet test **/*.Tests.csproj --configuration Release --no-build --verbosity normal
-  deploy_frontend:
-    needs: build_and_test_backend
-    runs-on: ubuntu-latest
-    name: Build and Deploy Frontend
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-
-      - name: Build And Deploy
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_RIVER_0974FA21E }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "./frontend"
-          api_location: ""
-          output_location: "build"
+        # Uruchamiamy testy bezpośrednio na pliku projektu testowego
+        run: dotnet test Backend.Tests/Backend.Tests.csproj --configuration Release --no-build --verbosity normal
