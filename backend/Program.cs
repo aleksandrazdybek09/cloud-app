@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Backend.Data;
 using Backend.Repositories;
 using Backend.Services;
@@ -5,8 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var keyVaultUri = builder.Configuration["KeyVaultUri"];
+if (!string.IsNullOrEmpty(keyVaultUri))
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultUri),
+        new DefaultAzureCredential());
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    var connectionString = builder.Configuration.GetConnectionString("DbConnectionString")
+                           ?? builder.Configuration["DbConnectionString"];
+    options.UseSqlServer(connectionString);
+});
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();

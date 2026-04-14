@@ -43,4 +43,12 @@ W tym etapie projekt został z sukcesem przeniesiony ze środowiska lokalnego (l
 * **Frontend (React):** Zintegrowanie aplikacji klienckiej z nowym, produkcyjnym adresem API.
 * **Hosting i CI/CD:** Wdrożenie frontendu przy pomocy usługi Azure Static Web Apps wraz z automatyzacją procesu budowania i publikacji (Continuous Deployment) przy użyciu GitHub Actions.
 
+# Realizacja Części 7: Zabezpieczenie danych dostępowych (Azure Key Vault i Managed Identity)
+W tym etapie skupiono się na podniesieniu poziomu bezpieczeństwa aplikacji poprzez całkowitą eliminację poufnych danych (takich jak hasła do bazy danych) z kodu źródłowego i przeniesienie ich do dedykowanego, bezpiecznego magazynu chmurowego.
+**Zrealizowane zadania:**
+* **Magazyn Kluczy (Azure Key Vault):** Utworzenie bezpiecznego zasobu w chmurze (usługa Key Vault) i przeniesienie do niego głównego ciągu połączenia do bazy danych (DbConnectionString) w formie zaszyfrowanego wpisu tajnego.
+* **Eliminacja sekretów z kodu (.NET 8):** Usunięcie jawnych haseł z plików konfiguracyjnych (appsettings.json, appsettings.Development.json). Zaktualizowanie konfiguracji w pliku Program.cs przy użyciu bibliotek Azure.Identity oraz DefaultAzureCredential, co pozwala na dynamiczne pobieranie poświadczeń w trakcie działania programu.
+* **Tożsamość Zarządzana (Managed Identity):** Włączenie tożsamości przypisanej przez system (System-assigned) dla backendu w usłudze Azure App Service. Skonfigurowanie kontroli dostępu (IAM) i nadanie aplikacji roli Użytkownika wpisów tajnych usługi Key Vault, co pozwala na bezpieczną, bezhasłową komunikację między usługami.
+* **Wdrożenie i weryfikacja:** Publikacja zaktualizowanej i zabezpieczonej wersji aplikacji w chmurze oraz weryfikacja poprawnego łączenia się z bazą danych przy wykorzystaniu poświadczeń pobieranych "w locie" z Magazynu Kluczy. Uaktualnienie repozytorium na platformie GitHub.
+
 > **Informacja:** Ten plik będzie ewoluował. [cite_start]W kolejnych etapach dodamy tutaj sekcję "Quick Start", opis zmiennych środowiskowych oraz instrukcję wdrożenia (CI/CD)[cite: 280, 549].
