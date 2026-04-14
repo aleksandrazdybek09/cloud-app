@@ -11,7 +11,6 @@ on:
 
 jobs:
   build_and_test_backend:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,14 +21,16 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        # Ta linia szuka wszystkich plików .csproj w całym repozytorium
+        run: dotnet restore **/*.csproj
 
       - name: Build Backend
-        run: dotnet build --no-restore --configuration Release
+        # Budujemy wszystko, co znaleźliśmy
+        run: dotnet build **/*.csproj --configuration Release --no-restore
 
       - name: Run Tests
-        run: dotnet test --no-build --configuration Release --verbosity normal
-
+        # Szukamy konkretnie projektu testowego i go uruchamiamy
+        run: dotnet test **/*.Tests.csproj --configuration Release --no-build --verbosity normal
   deploy_frontend:
     needs: build_and_test_backend
     runs-on: ubuntu-latest
