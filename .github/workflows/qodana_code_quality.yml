@@ -27,11 +27,15 @@ steps:
       dotnet-version: '8.0.x'
 
   - name: Restore dependencies
-    run: dotnet restore  # Bez gwiazdek, sam znajdzie co trzeba w solucji
+    # Przywracamy biblioteki dla obu projektów osobno
+    run: |
+      dotnet restore backend/Backend.csproj
+      dotnet restore Backend.Tests/Backend.Tests.csproj
 
   - name: Build Backend
-    run: dotnet build --configuration Release --no-restore
+    # Budujemy tylko główny backend
+    run: dotnet build backend/Backend.csproj --configuration Release --no-restore
 
   - name: Run Tests
-    # Tutaj musimy być precyzyjni, żeby wiedział co testować
-    run: dotnet test Backend.Tests/Backend.Tests.csproj --configuration Release --no-build
+    # Uruchamiamy testy bezpośrednio na pliku projektu testowego
+    run: dotnet test Backend.Tests/Backend.Tests.csproj --configuration Release --no-build --verbosity normal
