@@ -18,22 +18,20 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2025.2
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-        with:
-          # When pr-mode is set to true, Qodana analyzes only the files that have been changed
-          pr-mode: false
-          use-caches: true
-          post-pr-comment: true
-          use-annotations: true
-          # Upload Qodana results (SARIF, other artifacts, logs) as an artifact to the job
-          upload-result: false
-          # quick-fixes available in Ultimate and Ultimate Plus plans
-          push-fixes: 'none'
+steps:
+  - uses: actions/checkout@v3
+
+  - name: Setup .NET
+    uses: actions/setup-dotnet@v3
+    with:
+      dotnet-version: '8.0.x'
+
+  - name: Restore dependencies
+    run: dotnet restore  # Bez gwiazdek, sam znajdzie co trzeba w solucji
+
+  - name: Build Backend
+    run: dotnet build --configuration Release --no-restore
+
+  - name: Run Tests
+    # Tutaj musimy być precyzyjni, żeby wiedział co testować
+    run: dotnet test Backend.Tests/Backend.Tests.csproj --configuration Release --no-build
