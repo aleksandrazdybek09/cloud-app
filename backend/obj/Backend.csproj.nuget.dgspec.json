@@ -49,7 +49,7 @@
             },
             "Azure.Identity": {
               "target": "Package",
-              "version": "[1.11.4, )"
+              "version": "[1.18.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
