@@ -2,15 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
 using Backend.Models;
-using Backend.DTOs;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Backend.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class TasksController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -20,63 +16,42 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        // Uaktualniona metoda GetAll z mapowaniem na TaskReadDto
+        // GET: api/Tasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskReadDto>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasks()
         {
-            var tasks = await _context.Tasks
-                .Select(t => new TaskReadDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    IsCompleted = t.IsCompleted
-                })
-                .ToListAsync();
-
-            return Ok(tasks);
+            return await _context.TaskItems.ToListAsync();
         }
 
-        // Uaktualniona metoda GetById zwracająca DTO
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TaskReadDto>> GetTask(int id)
+        // POST: api/Tasks
+        [HttpPost]
+        public async Task<ActionResult<TaskItem>> CreateTask(TaskItem task)
         {
-            var task = await _context.Tasks.FindAsync(id);
+            _context.TaskItems.Add(task);
+            await _context.SaveChangesAsync();
 
-            if (task == null)
+            return CreatedAtAction(nameof(GetTasks), new { id = task.Id }, task);
+        }
+
+        // NOWOŚĆ -> DELETE: api/Tasks/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTask(int id)
+        {
+            // Szukamy zadania w bazie danych
+            var taskItem = await _context.TaskItems.FindAsync(id);
+
+            if (taskItem == null)
             {
+                // Jeśli nie ma takiego ID, zwracamy 404
                 return NotFound();
             }
 
-            var taskDto = new TaskReadDto
-            {
-                Id = task.Id,
-                Title = task.Title,
-                IsCompleted = task.IsCompleted
-            };
-
-            return Ok(taskDto);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<TaskReadDto>> PostTask(TaskCreateDto taskDto)
-        {
-            var task = new TaskItem
-            {
-                Title = taskDto.Title,
-                IsCompleted = false
-            };
-
-            _context.Tasks.Add(task);
+            // Usuwamy zadanie
+            _context.TaskItems.Remove(taskItem);
             await _context.SaveChangesAsync();
 
-            var readDto = new TaskReadDto
-            {
-                Id = task.Id,
-                Title = task.Title,
-                IsCompleted = task.IsCompleted
-            };
-
-            return CreatedAtAction(nameof(GetTask), new { id = task.Id }, readDto);
+            // Zwracamy 204 No Content (sukces)
+            return NoContent();
         }
     }
-}
+}}
