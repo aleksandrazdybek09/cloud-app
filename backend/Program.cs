@@ -6,32 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Obsługa Key Vault - dodajemy logikę bezpieczeństwa
 var keyVaultUri = builder.Configuration["KeyVaultUri"];
-if (!string.IsNullOrEmpty(keyVaultUri) && keyVaultUri != "YOUR_KEY_VAULT_URI")
+if (!string.IsNullOrEmpty(keyVaultUri))
 {
-    try
-    {
-        builder.Configuration.AddAzureKeyVault(
-            new Uri(keyVaultUri),
-            new DefaultAzureCredential());
-    }
-    catch (Exception ex)
-    {
-        // Jeśli Key Vault zawiedzie, logujemy to, ale pozwalamy aplikacji próbować dalej
-        Console.WriteLine($"Key Vault Error: {ex.Message}");
-    }
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultUri),
+        new DefaultAzureCredential());
 }
 
-// 2. Konfiguracja Bazy Danych
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DbConnectionString")
                            ?? builder.Configuration["DbConnectionString"];
-
-    // Jeśli używasz SQL Server
-    options.UseSqlServer(connectionString, sqlOptions =>
-        sqlOptions.EnableRetryOnFailure()); // Automatyczne ponowienie przy chwilowych błędach Azure
+    options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
@@ -51,32 +38,19 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 3. Swagger ZAWSZE aktywny (usuwamy warunek IsDevelopment dla testów w Azure)
+app.UseDefaultFiles(); // Pozwala serwerowi szukać index.html jako strony głównej
+app.UseStaticFiles();  // Pozwala serwerowi wysyłać pliki z folderu wwwroot
 app.UseSwagger();
-app.UseSwaggerUI(c => {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    c.RoutePrefix = string.Empty; // To sprawi, że Swagger otworzy się na głównej stronie!
-});
+app.UseSwaggerUI();
 
 app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 
-// 4. Bezpieczna inicjalizacja bazy danych
 using (var scope = app.Services.CreateScope())
 {
-    try
-    {
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        // EnsureCreated tworzy bazę, jeśli jej nie ma.
-        // W chmurze może to zająć chwilę lub rzucić błąd połączenia.
-        db.Database.EnsureCreated();
-    }
-    catch (Exception ex)
-    {
-        // Wyświetli błąd w Log Stream, ale nie wyłączy całej aplikacji
-        Console.WriteLine($"Database Initialization Error: {ex.Message}");
-    }
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
 }
 
 app.Run();
