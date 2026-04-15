@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CloudTask.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+baa01bb0beed7ba1616d093abaeb60d8c6e89ee7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cccae0f985bc316d743d514bf1d21cf409430c0d")]
 [assembly: System.Reflection.AssemblyProductAttribute("CloudTask.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CloudTask.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
