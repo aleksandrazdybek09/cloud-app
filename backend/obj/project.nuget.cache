@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "SvOz4kfXvKQ=",
-  "success": true,
+  "dgSpecHash": "nKbvSQNVEHA=",
+  "success": false,
   "projectFilePath": "C:\\Users\\student-wroclaw\\IdeaProjects\\cloud-app\\backend\\Backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\azure.core\\1.51.1\\azure.core.1.51.1.nupkg.sha512",
@@ -30,7 +30,7 @@
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.3\\microsoft.extensions.configuration.10.0.3.nupkg.sha512",
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.3\\microsoft.extensions.configuration.abstractions.10.0.3.nupkg.sha512",
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
-    "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.3\\microsoft.extensions.dependencyinjection.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.dependencymodel\\8.0.0\\microsoft.extensions.dependencymodel.8.0.0.nupkg.sha512",
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.diagnostics.abstractions\\10.0.3\\microsoft.extensions.diagnostics.abstractions.10.0.3.nupkg.sha512",
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\10.0.3\\microsoft.extensions.fileproviders.abstractions.10.0.3.nupkg.sha512",
@@ -89,5 +89,15 @@
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",
     "C:\\Users\\student-wroclaw\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1605",
+      "level": "Error",
+      "message": "Ostrzeżenie jako błąd: Wykryto obniżenie wersji pakietu: Microsoft.Extensions.DependencyInjection.Abstractions z 10.0.3 na 8.0.0. Aby wybrać inną wersję, odwołaj się do pakietu bezpośrednio z projektu. \r\n Backend -> Azure.Identity 1.18.0 -> Microsoft.Extensions.Hosting.Abstractions 10.0.3 -> Microsoft.Extensions.DependencyInjection.Abstractions (>= 10.0.3) \r\n Backend -> Microsoft.Extensions.DependencyInjection.Abstractions (>= 8.0.0)",
+      "libraryId": "Microsoft.Extensions.DependencyInjection.Abstractions",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
