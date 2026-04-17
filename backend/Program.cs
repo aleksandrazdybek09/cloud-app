@@ -16,8 +16,9 @@ if (!string.IsNullOrEmpty(keyVaultUri))
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DbConnectionString")
-                           ?? builder.Configuration["DbConnectionString"];
+    // ZMIANA TUTAJ: Zmieniono DbConnectionString na DefaultConnection
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                           ?? builder.Configuration["DefaultConnection"];
     options.UseSqlServer(connectionString);
 });
 

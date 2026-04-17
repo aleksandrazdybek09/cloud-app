@@ -33,7 +33,7 @@ namespace Backend.Controllers
             return CreatedAtAction(nameof(GetTasks), new { id = task.Id }, task);
         }
 
-        // NOWOŚĆ -> DELETE: api/Tasks/5
+        // DELETE: api/Tasks/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask(int id)
         {
@@ -54,4 +54,4 @@ namespace Backend.Controllers
             return NoContent();
         }
     }
-}}
+}
