@@ -33,7 +33,6 @@
 </div>
 
 <script>
-    // ADRES TWOJEGO API NA AZURE
     const API_URL = 'https://cloud-task-manager-api-zdybek-gdbaacducgfeeyah.westeurope-01.azurewebsites.net/api/Tasks';
 
     // 1. Pobieranie zadań
@@ -41,16 +40,22 @@
         try {
             const response = await fetch(API_URL);
             const tasks = await response.json();
+
             const list = document.getElementById('taskList');
             list.innerHTML = '';
 
             tasks.forEach(task => {
                 const li = document.createElement('li');
+
+                // Kuloodporne pobieranie ID i Nazwy (niezależnie czy C# używa wielkich czy małych liter)
+                const taskId = task.id !== undefined ? task.id : task.Id;
+                const taskName = task.name || task.Name || task.title || task.Title || "Brak nazwy";
+
                 li.innerHTML = `
                     <div class="task-info">
-                        <span>${task.name || task.title}</span>
+                        <span>${taskName}</span>
                     </div>
-                    <button class="delete-btn" onclick="deleteTask(${task.id})">Usuń</button>
+                    <button class="delete-btn" onclick="deleteTask(${taskId})">Usuń</button>
                 `;
                 list.appendChild(li);
             });
@@ -64,8 +69,9 @@
         const input = document.getElementById('taskInput');
         if (!input.value) return;
 
+        // Zamieniłem "name" na "title", bo Twój backend z C# oczekuje właściwości Title!
         const newTask = {
-            name: input.value, // Upewnij się czy w modelu masz Name czy Title
+            title: input.value,
             isCompleted: false
         };
 
@@ -76,13 +82,13 @@
                 body: JSON.stringify(newTask)
             });
             input.value = '';
-            fetchTasks();
+            fetchTasks(); // Odśwież listę po dodaniu
         } catch (error) {
             console.error('Błąd dodawania:', error);
         }
     }
 
-    // 3. Usuwanie zadania (NOWOŚĆ 8.4)
+    // 3. Usuwanie zadania
     async function deleteTask(id) {
         if (!confirm("Czy na pewno chcesz usunąć to zadanie?")) return;
 
@@ -94,7 +100,7 @@
             if (response.ok) {
                 fetchTasks(); // Odśwież listę po usunięciu
             } else {
-                alert("Błąd podczas usuwania zadania.");
+                alert("Błąd podczas usuwania. Sprawdź czy to zadanie jeszcze istnieje w bazie.");
             }
         } catch (error) {
             console.error('Błąd sieci:', error);

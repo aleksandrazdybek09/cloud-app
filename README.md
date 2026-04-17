@@ -51,4 +51,15 @@ W tym etapie skupiono się na podniesieniu poziomu bezpieczeństwa aplikacji pop
 * **Tożsamość Zarządzana (Managed Identity):** Włączenie tożsamości przypisanej przez system (System-assigned) dla backendu w usłudze Azure App Service. Skonfigurowanie kontroli dostępu (IAM) i nadanie aplikacji roli Użytkownika wpisów tajnych usługi Key Vault, co pozwala na bezpieczną, bezhasłową komunikację między usługami.
 * **Wdrożenie i weryfikacja:** Publikacja zaktualizowanej i zabezpieczonej wersji aplikacji w chmurze oraz weryfikacja poprawnego łączenia się z bazą danych przy wykorzystaniu poświadczeń pobieranych "w locie" z Magazynu Kluczy. Uaktualnienie repozytorium na platformie GitHub.
 
+# Realizacja Części 8: Automatyzacja wdrożeń (CI/CD), testowanie i nowa funkcjonalność
+W tym etapie skupiono się na usprawnieniu cyklu życia aplikacji poprzez automatyzację procesu publikacji, zapewnienie jakości kodu za pomocą testów oraz rozbudowę systemu o nowe możliwości zarządzania danymi. Zrealizowane zadania:
+
+* **Testy Jednostkowe (xUnit):** Utworzenie dedykowanego projektu testowego i napisanie "strażnika" logiki biznesowej. Zaimplementowanie metody testowej (NewTask_ShouldNotBeCompleted) weryfikującej, czy nowo tworzone obiekty zadań przyjmują domyślnie poprawny status ukończenia.
+
+* **Automatyzacja CI/CD (GitHub Actions):** Skonfigurowanie połączenia między repozytorium GitHub a usługą Azure App Service poprzez Centrum wdrażania. Uruchomienie automatycznego przepływu pracy (workflow), który samodzielnie kompiluje i wdraża nową wersję aplikacji po każdym wypchnięciu zmian (push) do gałęzi głównej.
+
+* **Rozbudowa funkcjonalności (Full-Stack):** Wprowadzenie funkcji usuwania zadań. Utworzenie nowego punktu końcowego w backendzie (DELETE /api/Tasks/{id}) połączonego z bazą danych SQL, oraz dodanie interaktywnego przycisku „Usuń” w interfejsie użytkownika (Frontend), korzystającego z asynchronicznych żądań JavaScript.
+
+* **Wdrożenie i weryfikacja (Push Test):** Przeprowadzenie testu automatyzacji udowadniającego poprawność działania potoku CI/CD (zmiany wypchnięte na GitHub automatycznie zaktualizowały działającą aplikację w chmurze Azure). Finalna aktualizacja struktury repozytorium i dokumentacji projektu.
+
 > **Informacja:** Ten plik będzie ewoluował. [cite_start]W kolejnych etapach dodamy tutaj sekcję "Quick Start", opis zmiennych środowiskowych oraz instrukcję wdrożenia (CI/CD)[cite: 280, 549].
